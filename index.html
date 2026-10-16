@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía del Sistema de Numeración Maya - Colegio Montano</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Theme Colors for Colegio Montano */
+        :root {
+            --azul-principal: #1269A8;
+            --amarillo-brillante: #F7D615;
+            --verde-grisaceo: #54887D;
+            --azul-claro: #88B5C7;
+            --verde-oliva: #A6B046;
+            --blanco-suave: #F2F5E9;
+            --texto-oscuro: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e2e8f0;
+            color: var(--texto-oscuro);
+            margin: 0;
+            padding: 12px;
+        }
+
+        .board-frame {
+            border: 10px solid #2d3748;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            background-color: var(--blanco-suave);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .board-header {
+            background-color: var(--azul-principal);
+            border-bottom: 4px solid var(--amarillo-brillante);
+        }
+
+        .tab-btn {
+            transition: all 0.25s ease;
+            font-weight: 600;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            color: #ffffff;
+            opacity: 0.85;
+        }
+
+        .tab-btn:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-btn.active {
+            background-color: var(--blanco-suave);
+            color: var(--azul-principal);
+            opacity: 1;
+            border-top: 4px solid var(--amarillo-brillante);
+            font-weight: 700;
+        }
+
+        .card-custom {
+            background-color: #ffffff;
+            border-left: 5px solid var(--azul-principal);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        .solution-box {
+            background-color: #f0f8ff;
+            border: 1px dashed var(--azul-claro);
+            border-radius: 8px;
+        }
+
+        .badge-basico {
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+
+        .badge-intermedio {
+            background-color: #fef9c3;
+            color: #a16207;
+            border: 1px solid #fde047;
+        }
+
+        .badge-avanzado {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--azul-claro);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--azul-principal);
+        }
+
+        /* SVG Maya Render Helpers */
+        .maya-box {
+            border: 2px solid #2d3748;
+            background-color: #ffffff;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="p-2 sm:p-4 min-h-screen">
+
+    <!-- MAIN BOARD CONTAINER -->
+    <div id="boardContainer" class="board-frame flex flex-col min-h-[90vh]">
+        
+        <!-- BOARD HEADER -->
+        <header class="board-header p-4 text-white flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Institutional Branding -->
+            <div class="flex items-center space-x-4">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" 
+                     alt="Logo Colegio Montano" 
+                     class="h-14 w-auto bg-white p-1 rounded-lg shadow-md object-contain"
+                     onerror="this.onerror=null; this.src='https://placehold.co/120x60/1269A8/FFFFFF?text=Montano';">
+                <div>
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-wide uppercase">Pizarra Digital Interactiva</h1>
+                    <p class="text-xs md:text-sm text-yellow-300 font-semibold">Colegio Montano • Sexto Grado de Primaria</p>
+                </div>
+            </div>
+
+            <!-- Title & Fullscreen Action -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+                <div class="text-right hidden sm:block">
+                    <span class="block text-xs uppercase tracking-wider text-blue-200">Materia: Matemática</span>
+                    <span class="font-bold text-lg text-white">Sistema de Numeración Maya</span>
+                </div>
+                <button onclick="toggleFullscreen()" 
+                        class="bg-[#F7D615] hover:bg-yellow-400 text-gray-900 font-bold py-2 px-4 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                    <i id="fullscreenIcon" class="fa-solid fa-expand"></i>
+                    <span id="fullscreenText" class="hidden sm:inline">Pantalla Completa</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- NAVIGATION MENU (Tabs) -->
+        <nav class="bg-[#1269A8] px-4 pt-2 flex flex-wrap gap-1 border-b border-gray-300 overflow-x-auto">
+            <button onclick="switchTab('teoria')" id="tab-teoria" class="tab-btn active px-4 py-2 text-sm md:text-base flex items-center gap-2">
+                <i class="fa-solid fa-book-open"></i> 1. Teoría
+            </button>
+            <button onclick="switchTab('ejemplos')" id="tab-ejemplos" class="tab-btn px-4 py-2 text-sm md:text-base flex items-center gap-2">
+                <i class="fa-solid fa-chalkboard-user"></i> 2. Ejemplos Resueltos
+            </button>
+            <button onclick="switchTab('ejercicios')" id="tab-ejercicios" class="tab-btn px-4 py-2 text-sm md:text-base flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> 3. Ejercicios Prácticos
+            </button>
+            <button onclick="switchTab('reflexion')" id="tab-reflexion" class="tab-btn px-4 py-2 text-sm md:text-base flex items-center gap-2">
+                <i class="fa-solid fa-brain"></i> 4. Reflexión Crítica
+            </button>
+            <button onclick="switchTab('evaluacion')" id="tab-evaluacion" class="tab-btn px-4 py-2 text-sm md:text-base flex items-center gap-2">
+                <i class="fa-solid fa-square-check"></i> 5. Evaluación Formativa
+            </button>
+        </nav>
+
+        <!-- CANVAS / WORKSPACE CONTENT -->
+        <main class="flex-grow p-4 md:p-6 overflow-y-auto bg-[#F2F5E9]">
+
+            <!-- ================= SECCIÓN 1: TEORÍA ================= -->
+            <section id="sec-teoria" class="space-y-6">
+                <div class="border-b-2 border-[#54887D] pb-3">
+                    <h2 class="text-2xl font-bold text-[#1269A8] flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group"></i> El Sistema de Numeración Maya
+                    </h2>
+                    <p class="text-gray-600 text-sm">Símbolos fundamentales (0 al 19), base vigesimal ($20$), orden de posición vertical y multiplicadores posicionales.</p>
+                </div>
+
+                <!-- Simbolos Fundamentales -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="card-custom p-5 lg:col-span-1">
+                        <h3 class="font-bold text-lg text-[#1269A8] mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-shapes"></i> Los 3 Símbolos Fundamentales
+                        </h3>
+                        <p class="text-sm text-gray-700 mb-4">Toda la numeración maya se construye combinando tres figuras icónicas:</p>
+                        
+                        <div class="grid grid-cols-3 gap-2 text-center font-bold text-sm">
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 shadow-sm flex flex-col items-center">
+                                <svg width="50" height="25" viewBox="0 0 100 50">
+                                    <ellipse cx="50" cy="25" rx="42" ry="18" fill="none" stroke="#1e293b" stroke-width="4"/>
+                                    <path d="M 15 25 Q 50 40 85 25" fill="none" stroke="#1e293b" stroke-width="3"/>
+                                    <path d="M 25 20 Q 50 32 75 20" fill="none" stroke="#1e293b" stroke-width="2"/>
+                                    <line x1="50" y1="7" x2="50" y2="28" stroke="#1e293b" stroke-width="2"/>
+                                </svg>
+                                <span class="text-xs text-gray-800 font-bold mt-1">Semilla / Caracol</span>
+                                <span class="text-xs text-blue-700 font-bold">Valor = $0$</span>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 shadow-sm flex flex-col items-center justify-between">
+                                <svg width="50" height="25" viewBox="0 0 100 50">
+                                    <circle cx="50" cy="25" r="12" fill="#1e293b"/>
+                                </svg>
+                                <span class="text-xs text-gray-800 font-bold">Punto</span>
+                                <span class="text-xs text-blue-700 font-bold">Valor = $1$</span>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 shadow-sm flex flex-col items-center justify-between">
+                                <svg width="50" height="25" viewBox="0 0 100 50">
+                                    <rect x="10" y="20" width="80" height="10" rx="3" fill="#1e293b"/>
+                                </svg>
+                                <span class="text-xs text-gray-800 font-bold">Raya / Barra</span>
+                                <span class="text-xs text-blue-700 font-bold">Valor = $5$</span>
+                            </div>
+                        </div>
+
+                        <!-- Reglas de uso -->
+                        <div class="mt-4 text-xs space-y-1.5 text-gray-700">
+                            <p class="bg-amber-50 p-2 rounded border border-amber-200">
+                                <strong>• Punto (•):</strong> Se repite un máximo de <strong>4 veces</strong> por casilla.
+                            </p>
+                            <p class="bg-emerald-50 p-2 rounded border border-emerald-200">
+                                <strong>• Raya (━):</strong> Se repite un máximo de <strong>3 veces</strong> por casilla ($3 \times 5 = 15$).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Números Mayas de 0 a 19 (Reference Image 2 adaptation) -->
+                    <div class="card-custom p-5 lg:col-span-2 border-l-4 border-[#A6B046]">
+                        <h3 class="font-bold text-lg text-[#1269A8] mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-table"></i> Números Mayas del $0$ al $19$ (Primer Nivel)
+                        </h3>
+                        <p class="text-xs text-gray-600 mb-3">Combinación exacta de caracol ($0$), puntos ($1$) y barras ($5$):</p>
+                        
+                        <!-- Grid 0 to 19 -->
+                        <div class="grid grid-cols-4 sm:grid-cols-5 gap-2 text-center text-xs font-mono font-bold">
+                            <!-- 0 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$0$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <ellipse cx="50" cy="25" rx="38" ry="16" fill="none" stroke="#1e293b" stroke-width="5"/>
+                                    <path d="M 20 25 Q 50 38 80 25" fill="none" stroke="#1e293b" stroke-width="4"/>
+                                </svg>
+                            </div>
+                            <!-- 1 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$1$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="50" cy="25" r="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 2 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$2$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="35" cy="25" r="8" fill="#1e293b"/>
+                                    <circle cx="65" cy="25" r="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 3 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$3$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="20" cy="25" r="8" fill="#1e293b"/>
+                                    <circle cx="50" cy="25" r="8" fill="#1e293b"/>
+                                    <circle cx="80" cy="25" r="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 4 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$4$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="12" cy="25" r="7" fill="#1e293b"/>
+                                    <circle cx="37" cy="25" r="7" fill="#1e293b"/>
+                                    <circle cx="62" cy="25" r="7" fill="#1e293b"/>
+                                    <circle cx="87" cy="25" r="7" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 5 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$5$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <rect x="10" y="20" width="80" height="10" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 6 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$6$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="50" cy="12" r="6" fill="#1e293b"/>
+                                    <rect x="10" y="28" width="80" height="9" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 7 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$7$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="35" cy="12" r="6" fill="#1e293b"/>
+                                    <circle cx="65" cy="12" r="6" fill="#1e293b"/>
+                                    <rect x="10" y="28" width="80" height="9" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 8 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$8$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="20" cy="12" r="6" fill="#1e293b"/>
+                                    <circle cx="50" cy="12" r="6" fill="#1e293b"/>
+                                    <circle cx="80" cy="12" r="6" fill="#1e293b"/>
+                                    <rect x="10" y="28" width="80" height="9" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 9 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$9$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="12" cy="12" r="5" fill="#1e293b"/>
+                                    <circle cx="37" cy="12" r="5" fill="#1e293b"/>
+                                    <circle cx="62" cy="12" r="5" fill="#1e293b"/>
+                                    <circle cx="87" cy="12" r="5" fill="#1e293b"/>
+                                    <rect x="10" y="28" width="80" height="9" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 10 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$10$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <rect x="10" y="10" width="80" height="9" fill="#1e293b"/>
+                                    <rect x="10" y="28" width="80" height="9" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 11 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$11$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="50" cy="8" r="5" fill="#1e293b"/>
+                                    <rect x="10" y="20" width="80" height="8" fill="#1e293b"/>
+                                    <rect x="10" y="34" width="80" height="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 12 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$12$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="35" cy="8" r="5" fill="#1e293b"/>
+                                    <circle cx="65" cy="8" r="5" fill="#1e293b"/>
+                                    <rect x="10" y="20" width="80" height="8" fill="#1e293b"/>
+                                    <rect x="10" y="34" width="80" height="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 13 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$13$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="20" cy="8" r="5" fill="#1e293b"/>
+                                    <circle cx="50" cy="8" r="5" fill="#1e293b"/>
+                                    <circle cx="80" cy="8" r="5" fill="#1e293b"/>
+                                    <rect x="10" y="20" width="80" height="8" fill="#1e293b"/>
+                                    <rect x="10" y="34" width="80" height="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 14 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$14$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="12" cy="8" r="5" fill="#1e293b"/>
+                                    <circle cx="37" cy="8" r="5" fill="#1e293b"/>
+                                    <circle cx="62" cy="8" r="5" fill="#1e293b"/>
+                                    <circle cx="87" cy="8" r="5" fill="#1e293b"/>
+                                    <rect x="10" y="20" width="80" height="8" fill="#1e293b"/>
+                                    <rect x="10" y="34" width="80" height="8" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 15 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$15$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <rect x="10" y="8" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="21" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="34" width="80" height="7" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 16 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$16$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="50" cy="6" r="4" fill="#1e293b"/>
+                                    <rect x="10" y="16" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="27" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="38" width="80" height="7" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 17 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$17$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="35" cy="6" r="4" fill="#1e293b"/>
+                                    <circle cx="65" cy="6" r="4" fill="#1e293b"/>
+                                    <rect x="10" y="16" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="27" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="38" width="80" height="7" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 18 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$18$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="20" cy="6" r="4" fill="#1e293b"/>
+                                    <circle cx="50" cy="6" r="4" fill="#1e293b"/>
+                                    <circle cx="80" cy="6" r="4" fill="#1e293b"/>
+                                    <rect x="10" y="16" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="27" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="38" width="80" height="7" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                            <!-- 19 -->
+                            <div class="bg-slate-50 p-1.5 rounded border">
+                                <div>$19$</div>
+                                <svg class="mx-auto" width="40" height="20" viewBox="0 0 100 50">
+                                    <circle cx="12" cy="6" r="4" fill="#1e293b"/>
+                                    <circle cx="37" cy="6" r="4" fill="#1e293b"/>
+                                    <circle cx="62" cy="6" r="4" fill="#1e293b"/>
+                                    <circle cx="87" cy="6" r="4" fill="#1e293b"/>
+                                    <rect x="10" y="16" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="27" width="80" height="7" fill="#1e293b"/>
+                                    <rect x="10" y="38" width="80" height="7" fill="#1e293b"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estructura Posicional Vigesimal (Reference Image 1 adaptation) -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h3 class="font-bold text-xl text-[#1269A8] mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-cubes-stacked"></i> Estructura Posicional Vertical y Multiplicadores
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                                A diferencia del sistema decimal que se lee horizontalmente, los números mayas se organizan en <strong>casillas apiladas verticalmente de abajo hacia arriba</strong>.
+                            </p>
+                            <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                Cada nivel se multiplica por una potencia de 20:
+                            </p>
+                            <ul class="text-xs space-y-2 text-gray-800">
+                                <li class="p-2 bg-purple-50 rounded border border-purple-200">
+                                    <strong>• 4° Nivel (Superior):</strong> Multiplicador $\mathbf{\times 8,000}$ ($20^3$)
+                                </li>
+                                <li class="p-2 bg-emerald-50 rounded border border-emerald-200">
+                                    <strong>• 3° Nivel:</strong> Multiplicador $\mathbf{\times 400}$ ($20^2$)
+                                </li>
+                                <li class="p-2 bg-amber-50 rounded border border-amber-200">
+                                    <strong>• 2° Nivel:</strong> Multiplicador $\mathbf{\times 20}$ ($20^1$)
+                                </li>
+                                <li class="p-2 bg-blue-50 rounded border border-blue-200">
+                                    <strong>• 1° Nivel (Inferior):</strong> Multiplicador $\mathbf{\times 1}$ ($20^0$)
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Visual reference column matching image 1 -->
+                        <div class="bg-slate-100 p-4 rounded-xl border border-slate-300 max-w-xs mx-auto w-full">
+                            <h4 class="text-xs font-bold text-center text-slate-700 mb-2 uppercase">Ejemplo de Torre Maya ($8,000$)</h4>
+                            <div class="flex flex-col gap-1 items-center font-bold text-sm">
+                                <!-- Level 4 -->
+                                <div class="flex items-center gap-3 w-full">
+                                    <div class="maya-box">
+                                        <svg width="35" height="15" viewBox="0 0 100 50">
+                                            <circle cx="50" cy="25" r="14" fill="#1e293b"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-indigo-900 font-extrabold text-base">$\mathbf{\times 8,000}$</span>
+                                </div>
+                                <!-- Level 3 -->
+                                <div class="flex items-center gap-3 w-full">
+                                    <div class="maya-box">
+                                        <svg width="35" height="15" viewBox="0 0 100 50">
+                                            <ellipse cx="50" cy="25" rx="38" ry="16" fill="none" stroke="#1e293b" stroke-width="5"/>
+                                            <path d="M 20 25 Q 50 38 80 25" fill="none" stroke="#1e293b" stroke-width="4"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-emerald-900 font-extrabold text-base">$\mathbf{\times 400}$</span>
+                                </div>
+                                <!-- Level 2 -->
+                                <div class="flex items-center gap-3 w-full">
+                                    <div class="maya-box">
+                                        <svg width="35" height="15" viewBox="0 0 100 50">
+                                            <ellipse cx="50" cy="25" rx="38" ry="16" fill="none" stroke="#1e293b" stroke-width="5"/>
+                                            <path d="M 20 25 Q 50 38 80 25" fill="none" stroke="#1e293b" stroke-width="4"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-amber-900 font-extrabold text-base">$\mathbf{\times 20}$</span>
+                                </div>
+                                <!-- Level 1 -->
+                                <div class="flex items-center gap-3 w-full">
+                                    <div class="maya-box">
+                                        <svg width="35" height="15" viewBox="0 0 100 50">
+                                            <ellipse cx="50" cy="25" rx="38" ry="16" fill="none" stroke="#1e293b" stroke-width="5"/>
+                                            <path d="M 20 25 Q 50 38 80 25" fill="none" stroke="#1e293b" stroke-width="4"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-blue-900 font-extrabold text-base">$\mathbf{\times 1}$</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-center text-xs text-gray-600 bg-white p-2 rounded border">
+                                $(1 \times 8000) + (0 \times 400) + (0 \times 20) + (0 \times 1) = \mathbf{8,000_{10}}$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Algoritmo de Conversión -->
+                <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-300">
+                    <h4 class="font-bold text-amber-900 text-sm flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-calculator"></i> Pasos para Convertir un Número Decimal a Maya
+                    </h4>
+                    <p class="text-xs text-amber-800 leading-relaxed">
+                        1. Identifica el multiplicador posicional más grande que sea menor o igual al número ($8,000$, $400$ o $20$).<br>
+                        2. Divide el número entre dicho multiplicador: el **cociente** es el valor maya de esa casilla ($0$ al $19$).<br>
+                        3. Toma el **residuo** y repite el procedimiento en las casillas inferiores hasta llegar al $1^{er}$ nivel ($\times 1$).
+                    </p>
+                </div>
+            </section>
+
+            <!-- ================= SECCIÓN 2: EJEMPLOS RESUELTOS ================= -->
+            <section id="sec-ejemplos" class="space-y-6 hidden">
+                <div class="border-b-2 border-[#54887D] pb-3">
+                    <h2 class="text-2xl font-bold text-[#1269A8] flex items-center gap-2">
+                        <i class="fa-solid fa-chalkboard-user"></i> Ejemplos Resueltos Paso a Paso
+                    </h2>
+                    <p class="text-gray-600 text-sm">15 Ejemplos minuciosamente explicados y divididos por niveles de complejidad posicional.</p>
+                </div>
+
+                <!-- Filtro de Niveles -->
+                <div class="flex gap-2 mb-4">
+                    <button onclick="filterExamples('all')" class="ex-filter-btn px-3 py-1 rounded-full text-xs font-bold bg-[#1269A8] text-white">Todos</button>
+                    <button onclick="filterExamples('basico')" class="ex-filter-btn px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800">Básico (1 Nivel)</button>
+                    <button onclick="filterExamples('intermedio')" class="ex-filter-btn px-3 py-1 rounded-full text-xs font-bold bg-amber-200 text-amber-800">Intermedio (2 Niveles)</button>
+                    <button onclick="filterExamples('avanzado')" class="ex-filter-btn px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800">Avanzado (3-4 Niveles)</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="examplesContainer">
+
+                    <!-- BÁSICO (5 Ejemplos) -->
+                    <div class="card-custom p-4 ex-card basico">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-basico">Básico #1</span>
+                            <span class="text-xs font-mono text-gray-500">1 Nivel ($0-19$)</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $8$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Descomposición: $5 + 3$</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $1$ barra ($5$) + $3$ puntos ($3$).<br>
+                            <strong>Resultado: $3$ puntos sobre $1$ barra horizontal.</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card basico">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-basico">Básico #2</span>
+                            <span class="text-xs font-mono text-gray-500">1 Nivel ($0-19$)</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $14$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Descomposición: $5 + 5 + 4$</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $2$ barras ($10$) + $4$ puntos ($4$).<br>
+                            <strong>Resultado: $4$ puntos sobre $2$ barras paralelas.</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card basico">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-basico">Básico #3</span>
+                            <span class="text-xs font-mono text-gray-500">1 Nivel ($0-19$)</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $19$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Máximo valor de 1 casilla ($15 + 4$)</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $3$ barras ($15$) + $4$ puntos ($4$).<br>
+                            <strong>Resultado: $4$ puntos sobre $3$ barras paralelas.</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card basico">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-basico">Básico #4</span>
+                            <span class="text-xs font-mono text-gray-500">Lectura Directa</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Leer la cifra: $2$ puntos sobre $2$ barras</h3>
+                        <p class="text-sm text-gray-600 my-2">Cálculo de primer nivel ($\times 1$):</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $2$ barras = $10$<br>
+                            • $2$ puntos = $2$<br>
+                            <strong>Resultado: $(10 + 2) \times 1 = \mathbf{12_{10}}$</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card basico">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-basico">Básico #5</span>
+                            <span class="text-xs font-mono text-gray-500">Concepto de Cero</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Representar $0$ unidades</h3>
+                        <p class="text-sm text-gray-600 my-2">Símbolo base:</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Ausencia de cantidad.<br>
+                            <strong>Resultado: Caracol / Semilla = $0$</strong>
+                        </div>
+                    </div>
+
+                    <!-- INTERMEDIO (5 Ejemplos) -->
+                    <div class="card-custom p-4 ex-card intermedio">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-intermedio">Intermedio #1</span>
+                            <span class="text-xs font-mono text-gray-500">2 Niveles</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $20$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">División por base 20: $20 = (1 \times 20) + 0$</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 2 ($\times 20$): $1$ punto = $20$<br>
+                            • Nivel 1 ($\times 1$): $1$ caracol = $0$<br>
+                            <strong>Resultado: [N2: •] / [N1: Caracol]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card intermedio">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-intermedio">Intermedio #2</span>
+                            <span class="text-xs font-mono text-gray-500">2 Niveles</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $65$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">$65 \div 20 = 3$ (Residuo $5$)</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 2 ($\times 20$): $3$ puntos = $60$<br>
+                            • Nivel 1 ($\times 1$): $1$ barra = $5$<br>
+                            <strong>Resultado: [N2: •••] / [N1: ━]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card intermedio">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-intermedio">Intermedio #3</span>
+                            <span class="text-xs font-mono text-gray-500">2 Niveles</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $108$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">$108 \div 20 = 5$ (Residuo $8$)</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 2 ($\times 20$): $1$ barra = $100$<br>
+                            • Nivel 1 ($\times 1$): $3$ puntos sobre $1$ barra = $8$<br>
+                            <strong>Resultado: [N2: ━] / [N1: •••/━]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card intermedio">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-intermedio">Intermedio #4</span>
+                            <span class="text-xs font-mono text-gray-500">2 Niveles</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Leer: [N2: $2$ pts sobre $1$ barra] / [N1: $4$ pts]</h3>
+                        <p class="text-sm text-gray-600 my-2">Cálculo de niveles:</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 2: $(5 + 2) \times 20 = 7 \times 20 = 140$<br>
+                            • Nivel 1: $4 \times 1 = 4$<br>
+                            <strong>Resultado: $140 + 4 = \mathbf{144_{10}}$</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card intermedio">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-intermedio">Intermedio #5</span>
+                            <span class="text-xs font-mono text-gray-500">Máximo 2 Niveles</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $399$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">$399 = (19 \times 20) + 19$</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 2: $4$ pts sobre $3$ barras ($19 \times 20 = 380$)<br>
+                            • Nivel 1: $4$ pts sobre $3$ barras ($19 \times 1 = 19$)<br>
+                            <strong>Resultado: $380 + 19 = \mathbf{399_{10}}$</strong>
+                        </div>
+                    </div>
+
+                    <!-- AVANZADO (5 Ejemplos) -->
+                    <div class="card-custom p-4 ex-card avanzado">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-avanzado">Avanzado #1</span>
+                            <span class="text-xs font-mono text-gray-500">3 Niveles ($\times 400$)</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $400$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Uso de ceros posicionales:</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 3 ($\times 400$): $1$ punto = $400$<br>
+                            • Nivel 2 ($\times 20$): Caracol = $0$<br>
+                            • Nivel 1 ($\times 1$): Caracol = $0$<br>
+                            <strong>Resultado: [N3: •] / [N2: Caracol] / [N1: Caracol]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card avanzado">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-avanzado">Avanzado #2</span>
+                            <span class="text-xs font-mono text-gray-500">3 Niveles</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $1,253$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Divisiones por potencias:</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $1253 \div 400 = 3$ (N3: ••• = $1200$)<br>
+                            • Residuo $53 \div 20 = 2$ (N2: •• = $40$)<br>
+                            • Residuo $13$ (N1: ••• sobre $2$ barras = $13$)<br>
+                            <strong>Resultado: [N3: •••] / [N2: ••] / [N1: •••/2 barras]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card avanzado">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-avanzado">Avanzado #3</span>
+                            <span class="text-xs font-mono text-gray-500">3 Niveles con Cero</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $2,007$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Análisis de casillas:</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $2007 \div 400 = 5$ (N3: $1$ barra = $2000$)<br>
+                            • Residuo $7 \div 20 = 0$ (N2: Caracol = $0$)<br>
+                            • Residuo $7$ (N1: •• sobre $1$ barra = $7$)<br>
+                            <strong>Resultado: [N3: ━] / [N2: Caracol] / [N1: ••/━]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card avanzado">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-avanzado">Avanzado #4</span>
+                            <span class="text-xs font-mono text-gray-500">4 Niveles ($\times 8,000$)</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Convertir $8,425$ a número Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Aprovechando las 4 posiciones:</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • Nivel 4 ($\times 8000$): $1$ punto = $8,000$<br>
+                            • Nivel 3 ($\times 400$): $1$ punto = $400$<br>
+                            • Nivel 2 ($\times 20$): $1$ punto = $20$<br>
+                            • Nivel 1 ($\times 1$): $1$ barra = $5$<br>
+                            <strong>Resultado: [N4: •] / [N3: •] / [N2: •] / [N1: ━]</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-custom p-4 ex-card avanzado">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold badge-avanzado">Avanzado #5</span>
+                            <span class="text-xs font-mono text-gray-500">Operaciones en Base Maya</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Sumar $150 + 260$ y dar el resultado en Maya</h3>
+                        <p class="text-sm text-gray-600 my-2">Suma decimal = $410$</p>
+                        <div class="text-xs font-mono bg-slate-100 p-2 rounded leading-relaxed">
+                            • $410 \div 400 = 1$ (N3: • = $400$)<br>
+                            • Residuo $10 \div 20 = 0$ (N2: Caracol = $0$)<br>
+                            • Residuo $10$ (N1: $2$ barras = $10$)<br>
+                            <strong>Resultado: [N3: •] / [N2: Caracol] / [N1: 2 barras]</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ================= SECCIÓN 3: EJERCICIOS PRÁCTICOS ================= -->
+            <section id="sec-ejercicios" class="space-y-6 hidden">
+                <div class="border-b-2 border-[#54887D] pb-3">
+                    <h2 class="text-2xl font-bold text-[#1269A8] flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square"></i> Ejercicios Prácticos Interactivos
+                    </h2>
+                    <p class="text-gray-600 text-sm">Resuelve cada ejercicio en tu cuaderno y despliega la solución para verificar tu proceso.</p>
+                </div>
+
+                <div class="space-y-4">
+                    
+                    <!-- BÁSICO -->
+                    <h3 class="font-bold text-lg text-emerald-800 bg-emerald-100 p-2 rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-seedling"></i> Nivel Básico - 1 Nivel (5 Ejercicios)
+                    </h3>
+
+                    <!-- B1 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio B-1:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-basico">Básico</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Escribe el número decimal <strong>$17$</strong> en simbología maya.</p>
+                        <button onclick="toggleSolution('sol-mb1')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mb1">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mb1" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $17 = 15 + 2$<br>
+                            • $15 = 3$ barras horizontales<br>
+                            • $2 = 2$ puntos arriba<br>
+                            <strong>Respuesta: $2$ puntos sobre $3$ barras paralelas.</strong>
+                        </div>
+                    </div>
+
+                    <!-- B2 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio B-2:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-basico">Básico</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">¿Qué número decimal representa la combinación: <strong>$4$ puntos sobre $2$ barras</strong>?</p>
+                        <button onclick="toggleSolution('sol-mb2')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mb2">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mb2" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $2$ barras = $5 + 5 = 10$<br>
+                            • $4$ puntos = $4$<br>
+                            • Total = $10 + 4 = \mathbf{14_{10}}$<br>
+                            <strong>Respuesta: $14$</strong>
+                        </div>
+                    </div>
+
+                    <!-- B3 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio B-3:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-basico">Básico</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Representa el número <strong>$9$</strong> en formato maya.</p>
+                        <button onclick="toggleSolution('sol-mb3')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mb3">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mb3" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $1$ barra = $5$<br>
+                            • $4$ puntos = $4$<br>
+                            <strong>Respuesta: $4$ puntos sobre $1$ barra.</strong>
+                        </div>
+                    </div>
+
+                    <!-- B4 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio B-4:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-basico">Básico</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Un alumno escribió $5$ puntos alineados para el número $5$. ¿Es esto correcto según las reglas mayas?</p>
+                        <button onclick="toggleSolution('sol-mb4')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mb4">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mb4" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            <strong>Incorrecto.</strong> El punto solo se puede repetir hasta $4$ veces consecutivas.<br>
+                            Al llegar a $5$ unidades, se debe sustituir por <strong>$1$ barra horizontal (━)</strong>.
+                        </div>
+                    </div>
+
+                    <!-- B5 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio B-5:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-basico">Básico</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Calcula en maya la suma simple de primer nivel: <strong>($3$ puntos) + ($1$ barra)</strong>.</p>
+                        <button onclick="toggleSolution('sol-mb5')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mb5">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mb5" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $3$ puntos = $3$<br>
+                            • $1$ barra = $5$<br>
+                            • Suma = $3 + 5 = 8$<br>
+                            <strong>Respuesta: $3$ puntos sobre $1$ barra.</strong>
+                        </div>
+                    </div>
+
+                    <!-- INTERMEDIO -->
+                    <h3 class="font-bold text-lg text-amber-800 bg-amber-100 p-2 rounded-lg flex items-center gap-2 mt-6">
+                        <i class="fa-solid fa-tree"></i> Nivel Intermedio - 2 Niveles (5 Ejercicios)
+                    </h3>
+
+                    <!-- I1 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio I-1:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-intermedio">Intermedio</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Convierte la cifra decimal <strong>$45$</strong> al sistema de numeración maya de 2 niveles.</p>
+                        <button onclick="toggleSolution('sol-mi1')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mi1">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mi1" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $45 \div 20 = 2$ (Cociente 2, Residuo 5)<br>
+                            • Nivel 2 ($\times 20$): $2$ puntos (••) = $40$<br>
+                            • Nivel 1 ($\times 1$): $1$ barra (━) = $5$<br>
+                            <strong>Respuesta: [N2: ••] / [N1: ━]</strong>
+                        </div>
+                    </div>
+
+                    <!-- I2 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio I-2:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-intermedio">Intermedio</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Lee la cifra dada en dos casillas posicionales: <strong>[N2: $1$ barra] / [N1: Caracol]</strong>.</p>
+                        <button onclick="toggleSolution('sol-mi2')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mi2">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mi2" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • Nivel 2: $1$ barra = $5 \times 20 = 100$<br>
+                            • Nivel 1: Caracol = $0 \times 1 = 0$<br>
+                            • Suma = $100 + 0 = \mathbf{100_{10}}$<br>
+                            <strong>Respuesta: $100$</strong>
+                        </div>
+                    </div>
+
+                    <!-- I3 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio I-3:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-intermedio">Intermedio</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Escribe el número <strong>$215$</strong> en la cuadrícula maya de 2 niveles.</p>
+                        <button onclick="toggleSolution('sol-mi3')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mi3">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mi3" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $215 \div 20 = 10$ (Residuo $15$)<br>
+                            • Nivel 2 ($\times 20$): $2$ barras = $10 \times 20 = 200$<br>
+                            • Nivel 1 ($\times 1$): $3$ barras = $15 \times 1 = 15$<br>
+                            <strong>Respuesta: [N2: 2 barras] / [N1: 3 barras]</strong>
+                        </div>
+                    </div>
+
+                    <!-- I4 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio I-4:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-intermedio">Intermedio</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Determina el valor decimal de: <strong>[N2: $3$ pts sobre $1$ barra] / [N1: $2$ pts]</strong>.</p>
+                        <button onclick="toggleSolution('sol-mi4')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mi4">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mi4" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • Nivel 2: $5 + 3 = 8 \rightarrow 8 \times 20 = 160$<br>
+                            • Nivel 1: $2 \rightarrow 2 \times 1 = 2$<br>
+                            • Total: $160 + 2 = \mathbf{162_{10}}$<br>
+                            <strong>Respuesta: $162$</strong>
+                        </div>
+                    </div>
+
+                    <!-- I5 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio I-5:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-intermedio">Intermedio</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">¿Cuál número es mayor? <strong>A) [N2: ••] / [N1: ━]</strong> o <strong>B) [N2: •] / [N1: $3$ barras]</strong>.</p>
+                        <button onclick="toggleSolution('sol-mi5')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-mi5">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-mi5" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • Número A: $(2 \times 20) + 5 = 40 + 5 = 45$<br>
+                            • Número B: $(1 \times 20) + 15 = 20 + 15 = 35$<br>
+                            <strong>Respuesta: El número A ($45$) es mayor que el número B ($35$).</strong>
+                        </div>
+                    </div>
+
+                    <!-- AVANZADO -->
+                    <h3 class="font-bold text-lg text-red-800 bg-red-100 p-2 rounded-lg flex items-center gap-2 mt-6">
+                        <i class="fa-solid fa-mountain"></i> Nivel Avanzado - 3 a 4 Niveles (5 Ejercicios)
+                    </h3>
+
+                    <!-- A1 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio A-1:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-avanzado">Avanzado</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Representa el número <strong>$521$</strong> en numeración maya de 3 niveles ($\times 400, \times 20, \times 1$).</p>
+                        <button onclick="toggleSolution('sol-ma1')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-ma1">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-ma1" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $521 \div 400 = 1$ (N3: • = $400$)<br>
+                            • Residuo $121 \div 20 = 6$ (N2: • sobre ━ = $120$)<br>
+                            • Residuo $1$ (N1: • = $1$)<br>
+                            <strong>Respuesta: [N3: •] / [N2: •/━] / [N1: •]</strong>
+                        </div>
+                    </div>
+
+                    <!-- A2 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio A-2:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-avanzado">Avanzado</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Calcula el valor decimal de: <strong>[N3: ••] / [N2: Caracol] / [N1: $4$ pts sobre $2$ barras]</strong>.</p>
+                        <button onclick="toggleSolution('sol-ma2')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-ma2">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-ma2" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • Nivel 3 ($\times 400$): $2 \times 400 = 800$<br>
+                            • Nivel 2 ($\times 20$): $0 \times 20 = 0$<br>
+                            • Nivel 1 ($\times 1$): $14 \times 1 = 14$<br>
+                            • Suma = $800 + 0 + 14 = \mathbf{814_{10}}$<br>
+                            <strong>Respuesta: $814$</strong>
+                        </div>
+                    </div>
+
+                    <!-- A3 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio A-3:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-avanzado">Avanzado</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Expresa en maya el año actual <strong>$2,026$</strong>.</p>
+                        <button onclick="toggleSolution('sol-ma3')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-ma3">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-ma3" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $2026 \div 400 = 5$ (N3: $1$ barra ━ = $2000$)<br>
+                            • Residuo $26 \div 20 = 1$ (N2: • = $20$)<br>
+                            • Residuo $6$ (N1: • sobre ━ = $6$)<br>
+                            <strong>Respuesta: [N3: ━] / [N2: •] / [N1: •/━]</strong>
+                        </div>
+                    </div>
+
+                    <!-- A4 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio A-4:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-avanzado">Avanzado</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Representa en 4 niveles el número <strong>$8,800$</strong> ($\times 8000, \times 400, \times 20, \times 1$).</p>
+                        <button onclick="toggleSolution('sol-ma4')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-ma4">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-ma4" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $8800 \div 8000 = 1$ (N4: • = $8,000$)<br>
+                            • Residuo $800 \div 400 = 2$ (N3: •• = $800$)<br>
+                            • Residuo $0 \div 20 = 0$ (N2: Caracol = $0$)<br>
+                            • Residuo $0 \times 1 = 0$ (N1: Caracol = $0$)<br>
+                            <strong>Respuesta: [N4: •] / [N3: ••] / [N2: Caracol] / [N1: Caracol]</strong>
+                        </div>
+                    </div>
+
+                    <!-- A5 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-[#1269A8]">Ejercicio A-5:</span>
+                            <span class="text-xs px-2 py-0.5 rounded badge-avanzado">Avanzado</span>
+                        </div>
+                        <p class="text-gray-800 font-medium">Resuelve la resta dada en decimal y expresa en maya: <strong>$1,000 - 180$</strong>.</p>
+                        <button onclick="toggleSolution('sol-ma5')" class="mt-3 text-xs bg-[#1269A8] text-white px-3 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> <span id="btn-text-sol-ma5">Mostrar Solución</span>
+                        </button>
+                        <div id="sol-ma5" class="solution-box p-3 mt-3 hidden text-sm text-gray-700">
+                            <strong class="text-emerald-700">Solución paso a paso:</strong><br>
+                            • $1000 - 180 = 820$<br>
+                            • $820 \div 400 = 2$ (N3: •• = $800$)<br>
+                            • Residuo $20 \div 20 = 1$ (N2: • = $20$)<br>
+                            • Residuo $0$ (N1: Caracol = $0$)<br>
+                            <strong>Respuesta: [N3: ••] / [N2: •] / [N1: Caracol]</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ================= SECCIÓN 4: REFLEXIÓN CRÍTICA ================= -->
+            <section id="sec-reflexion" class="space-y-6 hidden">
+                <div class="border-b-2 border-[#54887D] pb-3">
+                    <h2 class="text-2xl font-bold text-[#1269A8] flex items-center gap-2">
+                        <i class="fa-solid fa-brain"></i> Análisis y Pensamiento Crítico
+                    </h2>
+                    <p class="text-gray-600 text-sm">Preguntas de reflexión científica, comparación de abstracciones y riqueza cultural de Mesoamérica.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="bg-white p-5 rounded-xl border-t-4 border-[#1269A8] shadow-md">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#1269A8] font-bold">1</div>
+                            <h3 class="font-bold text-gray-800 text-lg">El Genio del Cero Maya</h3>
+                        </div>
+                        <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                            Mientras la civilización romana no concibió un símbolo para la ausencia de cantidad, los mayas crearon de forma independiente el concepto del **Cero (Semilla / Caracol)**. ¿Cómo influyó esto en sus avances astronómicos?
+                        </p>
+                        <div class="bg-blue-50 p-3 rounded-lg text-xs text-blue-900 border border-blue-200">
+                            <strong>Orientación Pedagógica:</strong> El cero posicional permitió a los mayas calcular ciclos astronómicos de millones de días (como la Cuenta Larga), hacer eficientes las operaciones matemáticas y registrar fechas exactas sin amontonar marcas infinitas.
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border-t-4 border-[#F7D615] shadow-md">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-bold">2</div>
+                            <h3 class="font-bold text-gray-800 text-lg">¿Por qué Base 20 (Vigesimal)?</h3>
+                        </div>
+                        <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                            Nuestro sistema actual es base 10 (inspirado en los 10 dedos de las manos). ¿En qué parte del cuerpo humano se inspiraron los astrónomos mayas para elegir una base 20?
+                        </p>
+                        <div class="bg-yellow-50 p-3 rounded-lg text-xs text-yellow-900 border border-yellow-200">
+                            <strong>Orientación Pedagógica:</strong> Los mayas se basaron en el total de dedos del ser humano completo ($10$ dedos de las manos + $10$ dedos de los pies = $20$), asociando el número 20 a una "persona completa" o *Winik*.
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border-t-4 border-[#54887D] shadow-md">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-[#54887D] font-bold">3</div>
+                            <h3 class="font-bold text-gray-800 text-lg">Orientación Vertical vs. Horizontal</h3>
+                        </div>
+                        <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                            ¿Qué ventajas o desventajas encuentras al escribir los niveles de manera vertical (de abajo hacia arriba) comparado con nuestra escritura horizontal de izquierda a derecha?
+                        </p>
+                        <div class="bg-teal-50 p-3 rounded-lg text-xs text-teal-900 border border-teal-200">
+                            <strong>Orientación Pedagógica:</strong> La disposición vertical refleja la arquitectura de las estelas y pirámides mayas. Mantiene de forma muy ordenada la jerarquía de las potencias de 20, aunque exige definir bien cada casilla para no mezclar niveles.
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border-t-4 border-[#A6B046] shadow-md">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-lime-100 flex items-center justify-center text-[#A6B046] font-bold">4</div>
+                            <h3 class="font-bold text-gray-800 text-lg">Elegancia de 3 Símbolos</h3>
+                        </div>
+                        <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                            Con solo **3 símbolos** (semilla, punto y barra), los mayas escribían cualquier número hasta el infinito. ¿Por qué esto representa un diseño abstracto tan moderno?
+                        </p>
+                        <div class="bg-lime-50 p-3 rounded-lg text-xs text-lime-900 border border-lime-200">
+                            <strong>Orientación Pedagógica:</strong> Demuestra la máxima eficiencia de diseño: memorizar únicamente tres iconos simples combinados con la regla del valor posicional equivale conceptualmente al sistema binario de la computación actual.
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ================= SECCIÓN 5: EVALUACIÓN FORMATIVA ================= -->
+            <section id="sec-evaluacion" class="space-y-6 hidden">
+                <div class="border-b-2 border-[#54887D] pb-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-[#1269A8] flex items-center gap-2">
+                            <i class="fa-solid fa-square-check"></i> Evaluación Formativa Rápida
+                        </h2>
+                        <p class="text-gray-600 text-sm">Responde las preguntas para verificar tu grado de comprensión del sistema vigesimal maya.</p>
+                    </div>
+                </div>
+
+                <!-- Quiz Interactivo -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 space-y-6" id="quizForm">
+
+                    <!-- Pregunta 1 -->
+                    <div class="border-b pb-4">
+                        <p class="font-bold text-gray-800 mb-2">1. ¿Cuál es la base fundamental del Sistema Maya y por cuál multiplicador se ajusta el 3er nivel posicional?</p>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq1" value="a" class="accent-[#1269A8]"> A) Base 10; el 3er nivel se multiplica por 100.
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq1" value="b" class="accent-[#1269A8]"> B) Base 20 (vigesimal); el 3er nivel se multiplica por $400$ ($20 \times 20$).
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq1" value="c" class="accent-[#1269A8]"> C) Base 60; el 3er nivel se multiplica por 3,600.
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="border-b pb-4">
+                        <p class="font-bold text-gray-800 mb-2">2. ¿Cuántas veces como máximo se puede repetir la barra horizontal (━) en una misma casilla posicional?</p>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq2" value="a" class="accent-[#1269A8]"> A) Hasta 4 veces consecutivas.
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq2" value="b" class="accent-[#1269A8]"> B) Sin límite de veces.
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq2" value="c" class="accent-[#1269A8]"> C) Hasta 3 veces ($3 \times 5 = 15$).
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="border-b pb-4">
+                        <p class="font-bold text-gray-800 mb-2">3. ¿Qué número decimal equivale a la estructura: [Nivel 2: •] / [Nivel 1: Caracol]?</p>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq3" value="a" class="accent-[#1269A8]"> A) $1$
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq3" value="b" class="accent-[#1269A8]"> B) $20$
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq3" value="c" class="accent-[#1269A8]"> C) $200$
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div>
+                        <p class="font-bold text-gray-800 mb-2">4. Para escribir el número decimal $405$ en maya, ¿cuántos niveles posicionales necesitas utilizar?</p>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq4" value="a" class="accent-[#1269A8]"> A) 3 niveles (porque $405 \ge 400$).
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq4" value="b" class="accent-[#1269A8]"> B) 2 niveles únicamente.
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="mq4" value="c" class="accent-[#1269A8]"> C) 4 niveles.
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Evaluación -->
+                    <button onclick="evaluateMayaQuiz()" class="w-full bg-[#1269A8] hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Validar Respuestas
+                    </button>
+                </div>
+
+                <!-- Resultado de la Evaluación -->
+                <div id="quizResult" class="hidden p-5 rounded-xl border text-center font-bold"></div>
+
+            </section>
+
+        </main>
+
+        <!-- FOOTER / CREDITOS -->
+        <footer class="bg-slate-800 text-white text-xs p-3 text-center border-t-2 border-[#F7D615] flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>
+                <span>© Colegio Montano • Recurso Educativo Digital Autónomo</span>
+            </div>
+            <div class="text-gray-400">
+                <span>Optimizado para Canvas Education & Smart Boards</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Automatic KaTeX Render Initialization
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            const sections = ['teoria', 'ejemplos', 'ejercicios', 'reflexion', 'evaluacion'];
+            sections.forEach(id => {
+                document.getElementById(`sec-${id}`).classList.add('hidden');
+                document.getElementById(`tab-${id}`).classList.remove('active');
+            });
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            // Re-render KaTeX when switching tabs
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById(`sec-${tabId}`), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // Toggle Solution Visibility in Exercises
+        function toggleSolution(solId) {
+            const solElement = document.getElementById(solId);
+            const btnText = document.getElementById(`btn-text-${solId}`);
+            
+            if (solElement.classList.contains('hidden')) {
+                solElement.classList.remove('hidden');
+                if (btnText) btnText.innerText = 'Ocultar Solución';
+
+                // Render KaTeX math when revealing solutions
+                if (window.renderMathInElement) {
+                    renderMathInElement(solElement, {
+                        delimiters: [
+                            {left: "$$", right: "$$", display: true},
+                            {left: "$", right: "$", display: false}
+                        ],
+                        throwOnError: false
+                    });
+                }
+            } else {
+                solElement.classList.add('hidden');
+                if (btnText) btnText.innerText = 'Mostrar Solución';
+            }
+        }
+
+        // Filter Solved Examples by Level
+        function filterExamples(level) {
+            const cards = document.querySelectorAll('.ex-card');
+            cards.forEach(card => {
+                if (level === 'all' || card.classList.contains(level)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Fullscreen Mode Logic (Fullscreen API)
+        function toggleFullscreen() {
+            const board = document.getElementById('boardContainer');
+            const icon = document.getElementById('fullscreenIcon');
+            const text = document.getElementById('fullscreenText');
+
+            if (!document.fullscreenElement) {
+                if (board.requestFullscreen) {
+                    board.requestFullscreen();
+                } else if (board.webkitRequestFullscreen) {
+                    board.webkitRequestFullscreen();
+                } else if (board.msRequestFullscreen) {
+                    board.msRequestFullscreen();
+                }
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+                text.innerText = 'Salir de Pantalla';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+                text.innerText = 'Pantalla Completa';
+            }
+        }
+
+        // Formative Quiz Evaluation Logic
+        function evaluateMayaQuiz() {
+            const answers = {
+                mq1: 'b',
+                mq2: 'c',
+                mq3: 'b',
+                mq4: 'a'
+            };
+
+            let score = 0;
+            let total = 4;
+
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) {
+                    score++;
+                }
+            }
+
+            const resultBox = document.getElementById('quizResult');
+            resultBox.classList.remove('hidden');
+
+            if (score === total) {
+                resultBox.className = "p-5 rounded-xl border bg-emerald-100 border-emerald-400 text-emerald-900 text-center font-bold";
+                resultBox.innerHTML = `<i class="fa-solid fa-circle-check text-2xl text-emerald-600 mb-2"></i><br>¡Excelente trabajo! Obtuviste ${score} de ${total} respuestas correctas (100%). Dominas perfectamente la numeración Maya vigesimal.`;
+            } else if (score >= 2) {
+                resultBox.className = "p-5 rounded-xl border bg-amber-100 border-amber-400 text-amber-900 text-center font-bold";
+                resultBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-2xl text-amber-600 mb-2"></i><br>¡Buen intento! Obtuviste ${score} de ${total} respuestas correctas. Repasa los multiplicadores posicionales ($1, 20, 400$).`;
+            } else {
+                resultBox.className = "p-5 rounded-xl border bg-red-100 border-red-400 text-red-900 text-center font-bold";
+                resultBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-2xl text-red-600 mb-2"></i><br>Obtuviste ${score} de ${total} respuestas correctas. Te recomendamos revisar la sección 1 (Teoría) y la tabla de niveles antes de reintentar.`;
+            }
+
+            if (window.renderMathInElement) {
+                renderMathInElement(resultBox, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+    </script>
+</body>
+</html>
